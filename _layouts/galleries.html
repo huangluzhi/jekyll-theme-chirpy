@@ -12,9 +12,8 @@ layout: gallerypage
 
             {% assign post_name = post.path | split:'/' | last | split:'.' | first %}
 
-            {% capture _album_dir %}
-                {{ post_name | url_encode }}
-            {% endcapture %}
+            {% assign _album_dir = post_name | url_encode %}
+
             {% assign _album_files = site.static_files | where_exp: "item", "item.gallery == true and item.path contains
     _album_dir" %}
             {% assign _album_path = _album_files[0].path %}
