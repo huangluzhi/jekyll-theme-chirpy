@@ -1,7 +1,7 @@
 ---
 layout: galleries
 title: Galleries
-icon: fas fa-info-circle
+icon: fas fa-images
 order: 5
 ---
 
