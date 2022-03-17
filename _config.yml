@@ -164,6 +164,11 @@ defaults:
       path: assets/js/dist
     values:
       swcache: true
+  - scope:
+      path: galleries
+    values:
+      gallery: true
+
 
 sass:
   style: compressed

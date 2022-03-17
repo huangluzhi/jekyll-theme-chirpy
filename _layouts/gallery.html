@@ -1,0 +1,79 @@
+---
+layout: gallerypage
+# The Archives of posts.
+---
+
+<div class="pl-xl-2" id="gallery">
+
+    {% assign post_name = page.path | split:'/' | last | split:'.' | first %}
+    {% capture _album_dir %}
+        {{ post_name | url_encode }}
+    {% endcapture %}
+    {% assign _album_files = site.static_files | where_exp: "item", "item.gallery == true and item.path contains
+  _album_dir" %}
+    {% assign _album_path = _album_files[0].path %}
+
+
+    <div id="media">
+        {% for myimage in _album_files %}
+
+            <a href="{{ myimage.path }}">
+                <img src="{{ myimage.path }}" alt="">
+                <div class="jg-caption">
+                    <div class="summary">{{ myimage.name }}</div>
+                </div>
+
+            </a>
+        {% endfor %}
+    </div>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            lightGallery(document.getElementById("media"), {
+                plugins: [
+                    lgZoom, lgThumbnail
+                ],
+                speed: 0,
+                mode: "lg-fade",
+                thumbWidth: 80,
+                controls: true,
+                loop: false,
+                download: true,
+                counter: true,
+                videojs: true,
+                // exThumbImage: 'data-exthumbimage',
+                licenseKey: "your_license_key"
+            });
+
+            // Init justified gallery for albums
+            $("#albums").justifiedGallery({
+                margins: 10,
+                rowHeight: 300,
+                maxRowHeight: 325,
+                cssAnimation: false,
+                captionSettings: {
+                    animationDuration: 500,
+                    visibleOpacity: 0.7,
+                    nonVisibleOpacity: 0.7
+                }
+            });
+
+            // Init justified gallery for photos
+            $("#media").justifiedGallery({ // selector: '.albumList',
+                cssAnimation: false,
+                // waitThumbnailsLoad: false,
+                margins: 10,
+                rowHeight: 250,
+                maxRowHeight: 275,
+                captionSettings: {
+                    animationDuration: 200,
+                    visibleOpacity: 0.7,
+                    nonVisibleOpacity: 0.0
+                }
+            });
+        });
+    </script>
+</div>

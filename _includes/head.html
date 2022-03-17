@@ -3,91 +3,110 @@
 -->
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 
-  <!-- Allow having a localized datetime different from the appearance language -->
-  {% if site.prefer_datetime_locale %}
-    <meta name="prefer-datetime-locale" content="{{ site.prefer_datetime_locale }}">
-  {% endif %}
-
-  {% if page.layout == 'home' or page.layout == 'post' %}
-
-    {% if site.google_analytics.pv.proxy_endpoint %}
-      <meta name="pv-proxy-endpoint" content="{{ site.google_analytics.pv.proxy_endpoint }}">
+    <!-- Allow having a localized datetime different from the appearance language -->
+    {% if site.prefer_datetime_locale %}
+        <meta name="prefer-datetime-locale" content="{{ site.prefer_datetime_locale }}">
     {% endif %}
 
-    {% if site.google_analytics.pv.cache_path %}
-      <meta name="pv-cache-path" content="{{ site.google_analytics.pv.cache_path | relative_url }}">
+    {% if page.layout == 'home' or page.layout == 'post' %}
+
+        {% if site.google_analytics.pv.proxy_endpoint %}
+            <meta name="pv-proxy-endpoint" content="{{ site.google_analytics.pv.proxy_endpoint }}">
+        {% endif %}
+
+        {% if site.google_analytics.pv.cache_path %}
+            <meta name="pv-cache-path" content="{{ site.google_analytics.pv.cache_path | relative_url }}">
+        {% endif %}
+
     {% endif %}
 
-  {% endif %}
+    {% seo title=false %}
 
-  {% seo title=false %}
+    <title>
+        {%- unless page.layout == "home" -%}
+            {{ page.title | append: " | "}}
+        {%- endunless -%}
+        {{ site.title }}
+    </title>
 
-  <title>
-  {%- unless page.layout == "home" -%}
-    {{ page.title | append: " | "}}
-  {%- endunless -%}
-    {{ site.title }}
-  </title>
+    {% include favicons.html %}
 
-  {% include favicons.html %}
+    {% if site.resources.ignore_env != jekyll.environment and site.resources.self_hosted %}
 
-  {% if site.resources.ignore_env != jekyll.environment and site.resources.self_hosted %}
+        <link href="{{ site.data.assets[origin].webfonts | relative_url }}" rel="stylesheet">
 
-    <link href="{{ site.data.assets[origin].webfonts | relative_url }}" rel="stylesheet">
+    {% else %}
 
-  {% else %}
+        {% for cdn in site.data.assets[origin].cdns %}
+            <link rel="preconnect" href="{{ cdn.url }}" {{ cdn.args }}>
+            <link rel="dns-prefetch" href="{{ cdn.url }}" {{ cdn.args }}>
+        {% endfor %}
 
-    {% for cdn in site.data.assets[origin].cdns %}
-      <link rel="preconnect" href="{{ cdn.url }}" {{ cdn.args }}>
-      <link rel="dns-prefetch" href="{{ cdn.url }}" {{ cdn.args }}>
-    {% endfor %}
+        <link rel="stylesheet" href="{{ site.data.assets[origin].webfonts }}">
 
-    <link rel="stylesheet" href="{{ site.data.assets[origin].webfonts }}">
-
-  {% endif %}
-
-  <!-- GA -->
-  {% if jekyll.environment == 'production'
-      and site.google_analytics.id != empty and site.google_analytics.id %}
-    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials">
-    <link rel="dns-prefetch" href="https://www.google-analytics.com">
-
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous">
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-
-    {% if site.google_analytics.pv.proxy_endpoint %}
-      {% assign proxy_url = site.google_analytics.pv.proxy_endpoint
-          | replace: "https://", "" | split: "/" | first | prepend: "https://" %}
-      <link rel="preconnect" href="{{ proxy_url }}" crossorigin="use-credentials">
-      <link rel="dns-prefetch" href="{{ proxy_url }}">
     {% endif %}
-  {% endif %}
 
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="{{ site.data.assets[origin].bootstrap.css }}">
+    <!-- GA -->
+    {% if jekyll.environment == 'production'
+  and site.google_analytics.id != empty and site.google_analytics.id %}
+        <link crossorigin="use-credentials" href="https://www.google-analytics.com" rel="preconnect">
+        <link href="https://www.google-analytics.com" rel="dns-prefetch">
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ site.data.assets[origin].fontawesome.css }}">
+        <link crossorigin="anonymous" href="https://www.googletagmanager.com" rel="preconnect">
+        <link href="https://www.googletagmanager.com" rel="dns-prefetch">
 
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+        {% if site.google_analytics.pv.proxy_endpoint %}
+            {% assign proxy_url = site.google_analytics.pv.proxy_endpoint
+  | replace: "https://", "" | split: "/" | first | prepend: "https://" %}
+            <link rel="preconnect" href="{{ proxy_url }}" crossorigin="use-credentials">
+            <link rel="dns-prefetch" href="{{ proxy_url }}">
+        {% endif %}
+    {% endif %}
 
-  {% if site.toc and page.toc %}
-    <link rel="stylesheet" href="{{ site.data.assets[origin].bootstrap-toc.css }}">
-  {% endif %}
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{{ site.data.assets[origin].bootstrap.css }}">
 
-  {% if page.layout == 'page' or page.layout == 'post' %}
-    <!-- Manific Popup -->
-    <link rel="stylesheet" href="{{ site.data.assets[origin].magnific-popup.css }}">
-  {% endif %}
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ site.data.assets[origin].fontawesome.css }}">
 
-  <!-- JavaScript -->
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 
-  <script src="{{ site.data.assets[origin].jquery.js }}"></script>
+    {% if site.toc and page.toc %}
+        <link rel="stylesheet" href="{{ site.data.assets[origin].bootstrap-toc.css }}">
+    {% endif %}
 
-  {% unless site.theme_mode %}
-    {% include mode-toggle.html %}
-  {% endunless %}
+    {% if page.layout == 'page' or page.layout == 'post' %}
+        <!-- Manific Popup -->
+        <link rel="stylesheet" href="{{ site.data.assets[origin].magnific-popup.css }}">
+    {% endif %}
+
+    <!-- JavaScript -->
+
+    <script src="{{ site.data.assets[origin].jquery.js }}"></script>
+
+    {% if page.layout == 'galleries' or page.layout == 'gallery' %}
+        <script src="{{ '/assets/js/lightgallery/lightgallery.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/dist/jquery.justifiedGallery.min.js' | relative_url }}"></script>
+        <script src="/assets/js/dist/jquery.justifiedGallery.min.js"></script>
+        <!-- lightgallery plugins -->
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-thumbnail.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-zoom.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-autoplay.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-medium-zoom.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-share.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-comment.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-pager.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-rotate.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-fullscreen.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-relative-caption.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-video.umd.js' | relative_url }}"></script>
+        <script src="{{ '/assets/js/lightgallery/plugins/lg-hash.umd.js' | relative_url }}"></script>
+    {% endif %}
+
+    {% unless site.theme_mode %}
+        {% include mode-toggle.html %}
+    {% endunless %}
 </head>

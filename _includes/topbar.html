@@ -37,6 +37,13 @@
               {{ site.data.locales[lang].tabs[item] | default: page.title }}
             </a>
           </span>
+
+        {% elsif page.layout == 'gallery' %}
+          <span>
+            <a href="/galleries">
+              Galleries
+            </a>
+          </span>
         {% endif %}
 
       {% endfor %}
